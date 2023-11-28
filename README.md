@@ -1,4 +1,4 @@
-# Тестовое задание ТГ @brelgin \
+# Тестовое задание ТГ @brelgin 
 ссылка на G.Диск: https://drive.google.com/drive/folders/1xLiXIjmlGDwCrCl6G1p1MvQTD6sqoF8y?usp=sharing \
 
 
