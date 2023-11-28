@@ -8,6 +8,8 @@ from utilites import db_commands
 
 @labeler.message(payload={'command': 'weather'})
 async def weather_select(message: Message):
+    """Выбор пользователем дня. Сегодня или завтра"""
+
     await message.answer(
         'Хорошо! Только для начала давай определимся:\n\n'
         'Тебе на сегодня или на завтра?',
@@ -19,6 +21,7 @@ async def weather_select(message: Message):
 @labeler.message(state=Weather.DATE,
                  payload=[{'dayweek': 'today'}, {'dayweek': 'tomorrow'}])
 async def weather_sent(message: Message):
+
     day = 'Сегодня' if message.payload == '{"dayweek":"today"}' else 'Завтра'
     weather = weather_get(message.from_id)[day]
 
@@ -39,6 +42,8 @@ async def weather_sent(message: Message):
 
 
 def weather_get(user_id):
+    """Запрос актуальных данных о погоде"""
+
     weather_request = requests.get(
         url=f'https://api.openweathermap.org/data/2.5/forecast',
         params={

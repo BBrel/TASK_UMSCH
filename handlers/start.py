@@ -8,6 +8,7 @@ from utilites import db_commands
 
 @labeler.message(text='Начать')
 async def starting(message: Message):
+    # проверка на наличие пользователя в БД
     if not db_commands.check_user(user_id=message.from_id):
         await start_new_user(message)
 
@@ -28,10 +29,12 @@ async def start_new_user(message: Message):
                                     'fields': 'city',
                                     'user_ids': message.from_id
                                 }).json()['response'][0]
+
     if 'city' in city_request:
         await message.answer(f'Привет! Дай уточню, твой город {city_request["city"]["title"]}?',
                              keyboard=confirmation)
         db_commands.add_city(user_id=message.from_id, city=city_request['city']["title"])
+
     else:
         await message.answer(f'Привет! У тебя не указан город в профиле. Скажешь мне его?',
                              keyboard=geoposition)
@@ -48,6 +51,7 @@ async def registration_yes(message: Message):
 async def registration_no(message: Message):
     await message.answer(f'Понял. Тогда отправь мне свое гео)',
                          keyboard=geoposition)
+
     await state_dispenser.set(message.peer_id, Reg.USER_CITY)
 
 

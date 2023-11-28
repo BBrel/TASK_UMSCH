@@ -10,6 +10,8 @@ from utilites import db_commands
 
 @labeler.message(payload={'command': 'afisha'})
 async def afisha_select(message: Message):
+    """Выбор пользователем дня. Сегодня или завтра"""
+
     await message.answer(
         'Уф! Сегодня многое намечается)\n\n'
         'Или тебе афишу на завтра показать?',
@@ -21,6 +23,8 @@ async def afisha_select(message: Message):
 @labeler.message(state=Afisha.DATE,
                  payload=[{'dayweek': 'today'}, {'dayweek': 'tomorrow'}])
 async def afisha_sent(message: Message):
+    """Преобразование результата функций в сообщение пользователю"""
+
     tomorrow = False if message.payload == '{"dayweek":"today"}' else True
     afisha = afisha_get(message.from_id, tomorrow=tomorrow)
 
@@ -42,11 +46,13 @@ async def afisha_sent(message: Message):
 
 
 def afisha_get(user_id, tomorrow=False):
-    day_from = datetime.datetime.today()
-    user_city = db_commands.get_user_city(user_id=user_id)[0].lower()
+    """Функция запроса актуальной афиши"""
+
+    day_from = datetime.datetime.today()  # начало промежутка для поиска
+    user_city = db_commands.get_user_city(user_id=user_id)[0].lower()  # запрос города из БД
     if tomorrow:
         day_from += datetime.timedelta(days=1)
-    day_to = day_from + datetime.timedelta(days=1)
+    day_to = day_from + datetime.timedelta(days=1)  # конец промежутка поиска
 
     afisha_request = requests.get(url='https://kudago.com/public-api/v1.4/events/',
                                   params={

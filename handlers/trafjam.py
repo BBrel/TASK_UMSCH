@@ -15,6 +15,10 @@ async def trafjam_sent(message: Message):
 
 
 def trafjam_predict(user_id):
+    """Так как получить данные о пробках в городах при помощи парсинга
+    веб-страницы не получилось, придумал простой алгоритм
+    для получения примерного балла пробок"""
+
     time = get_time_hour(user_id)
     weather = weather_get(user_id)['Сегодня']
     coof = 1
@@ -29,6 +33,8 @@ def trafjam_predict(user_id):
 
 
 def get_time_hour(user_id):
+    """Получение актуального времени в городе пользователя"""
+
     user = fake_useragent.UserAgent().random
     time_request = requests.get(
         url=f'https://time.is/ru/{"казань"}',
@@ -36,4 +42,5 @@ def get_time_hour(user_id):
 
     soup = BeautifulSoup(time_request.text, "html.parser")
     time_hour = soup.find(id='clock').get_text()[:2]
+
     return int(time_hour)
